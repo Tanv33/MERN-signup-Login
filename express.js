@@ -1,10 +1,10 @@
 const express = require("express");
-const cors = require("cors");
+// const cors = require("cors");
 const path = require("path");
 const app = express();
-const port = process.env.PORT || 2000;
+const PORT = process.env.PORT || 2000;
 
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 const mongoose = require("mongoose");
 mongoose.connect(
@@ -24,7 +24,7 @@ const signup = mongoose.model("signup User", {
 
 // let arr = []
 
-app.get("/", (req, res) => res.send("<h1>You are on /</h1>"));
+// app.get("/", (req, res) => res.send("<h1>You are on /</h1>"));
 
 app.get("/api/v1/signupuser", (req, res) => {
   // res.send(arr);
@@ -81,6 +81,6 @@ app.post("/api/v1/login", (req, res) => {
 //     res.send("<h1>Delete</h1>")
 // ));
 
-app.listen(port, () =>
-  console.log(`Example app listening on http://localhost:${port}`)
+app.listen(PORT, () =>
+  console.log(`Example app listening on http://localhost:${PORT}`)
 );
