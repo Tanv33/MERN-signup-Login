@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+.loginHeading{
+  margin: 10px;
+  color:  darkblue;
+  font-size: xx-large;
+}
+/*   
+  h1 {
+    color: #426696;
+    font-weight: 600;
+    font-size: 2.5rem;
+    opacity: 0.8;
+  }
+  h2,
+  p {
+    color: #658ec6;
+    font-weight: 500;
+    opacity: 0.8;
+  }
+  
+  h3 {
+    color: #426696;
+    font-weight: 600;
+    opacity: 0.8;
+  } */
+  
+  main {
+    font-family: "Poppins", sans-serif;
+    height: 100vh;
+    background: linear-gradient(to right top, #65dfc9, #6cdbeb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .flex{
+  
+    display: flex;
+    justify-content: center;
+  }
+  .glass {
+    background: white;
+    min-height: 80vh;
+    width: 60%;
+    background: linear-gradient(
+      to right bottom,
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0.3)
+    );
+    border-radius: 2rem;
+    z-index: 2;
+    backdrop-filter: blur(2rem);
+  }
+  
+  @media screen and (max-width: 425px) {
+    .glass {
+      width: 94%;
+    }
+  }
+  
