@@ -81,6 +81,10 @@ app.post("/api/v1/login", (req, res) => {
 //     res.send("<h1>Delete</h1>")
 // ));
 
+app.get("/**", (req, res) => {
+  // res.redirect("/")
+  res.sendFile(path.join(__dirname, "./web/build/index.html"));
+});
 app.listen(PORT, () =>
   console.log(`Example app listening on http://localhost:${PORT}`)
 );
