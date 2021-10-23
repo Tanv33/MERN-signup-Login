@@ -2,6 +2,7 @@
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
+import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -41,10 +42,13 @@ export default function Home() {
         </Toolbar>
       </AppBar>
     </Box>
-    <div style={{ width:"100vw",height:"80vh", display:"flex",justifyContent:"center", alignItems:"center"}}>
-    <Typography variant="h3" style={{fontWeight:"bolder",color:"#800020"}} >Login To Access Services</Typography>
+    <Container>
+
+    <div style={{ width:"100%",height:"80vh", display:"flex",justifyContent:"center", alignItems:"center",textAlign:"center"}}>
+    <Typography variant="h4" style={{fontWeight:"bolder",color:"#800020"}} >Login To Access Services</Typography>
 
     </div>
+    </Container>
     </>
   );
 }
