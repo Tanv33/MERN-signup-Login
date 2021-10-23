@@ -1,6 +1,7 @@
 import "./Signup.css";
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -100,20 +101,22 @@ function Signup() {
       ) : (
         ""
       )}
-      <main>
-        <section className="glass">
-          <div className="flex">
-            <h1 className="signHeading">Signup Form</h1>
+      <div className="mainParentSign">
+        <div className="parentChildSign">
+          <div className="loginHeadingSign">
+            <Typography
+              variant="h4"
+              style={{ fontWeight: "bold", color: "#800020" }}
+            >
+              Signup Form
+            </Typography>
           </div>
           <Box
             type="form"
             component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "70%" },
-            }}
             noValidate
             autoComplete="off"
-            textAlign="center"
+            // textAlign="center"
             onSubmit={formik.handleSubmit}
           >
             <TextField
@@ -127,6 +130,7 @@ function Signup() {
               onBlur={formik.handleBlur}
               error={formik.touched.fullName && Boolean(formik.errors.fullName)}
               helperText={formik.touched.fullName && formik.errors.fullName}
+              style={{marginBottom:"10px"}}
             />
             <TextField
               fullWidth
@@ -139,6 +143,7 @@ function Signup() {
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
+              style={{marginBottom:"10px"}}
             />
 
             <FormControl component="fieldset">
@@ -178,6 +183,7 @@ function Signup() {
               helperText={
                 formik.touched.phoneNumber && formik.errors.phoneNumber
               }
+              style={{marginBottom:"10px"}}
             />
             <TextField
               fullWidth
@@ -190,6 +196,7 @@ function Signup() {
               onChange={formik.handleChange}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
+              style={{marginBottom:"10px"}}
             />
             <TextField
               fullWidth
@@ -202,30 +209,31 @@ function Signup() {
               onChange={formik.handleChange}
               error={formik.touched.address && Boolean(formik.errors.address)}
               helperText={formik.touched.address && formik.errors.address}
+              style={{marginBottom:"10px"}}
             />
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button
-                type="submit"
-                size="medium"
-                variant="contained"
-                color="info"
-                style={{ margin: "4px" }}
-              >
-                Submit
-              </Button>
-              <Button
-                size="medium"
-                variant="contained"
-                color="success"
-                style={{ margin: "4px" }}
-                onClick={() => history.push("/login")}
-              >
-                I have an account
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              size="medium"
+              variant="contained"
+
+              style={{ marginRight: "5px", backgroundColor: "#800020", marginBottom:"15px" }}
+
+            >
+              Submit
+            </Button>
+            <Button
+              size="medium"
+              variant="contained"
+              color="success"
+              style={{ backgroundColor: "#800020", marginBottom:"15px" }}
+
+              onClick={() => history.push("/login")}
+            >
+              I have an account
+            </Button>
           </Box>
-        </section>
-      </main>
+        </div>
+      </div>
     </div>
   );
 }

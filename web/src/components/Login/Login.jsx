@@ -1,8 +1,10 @@
+
+
 import "./Login.css";
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
@@ -72,25 +74,26 @@ function Login() {
 
   const history = useHistory();
   return (
-    <div>
+    <>
       {messageBar === true ? <Message type="success" message="Welcome" /> : ""}
       {messageBar === false ? (
         <Message type="error" message="Invalid email or password" />
       ) : (
         ""
       )}
-
-      <main>
-        <section className="glass">
-          <div className="flex">
-            <h1 className="loginHeading">Login Form</h1>
+      <div className="mainParent">
+        <div className="parentChild">
+          <div className="loginHeading">
+            <Typography
+              variant="h4"
+              style={{ fontWeight: "bold", color: "#800020" }}
+            >
+              Login Form
+            </Typography>
           </div>
           <Box
             type="form"
             component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "70%" },
-            }}
             noValidate
             autoComplete="off"
             textAlign="center"
@@ -107,6 +110,7 @@ function Login() {
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
+              style={{ marginBottom: "15px" }}
             />
 
             <TextField
@@ -122,31 +126,35 @@ function Login() {
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
             />
-
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                marginTop: "12px",
+              }}
+            >
               <Button
                 type="submit"
-                size="medium"
+                size="small"
                 variant="contained"
-                color="info"
-                style={{ margin: "4px" }}
+                style={{ marginRight: "5px", backgroundColor: "#800020" }}
               >
                 Submit
               </Button>
               <Button
-                size="medium"
                 variant="contained"
-                color="success"
-                style={{ margin: "4px" }}
+                size="small"
+                color="error"
                 onClick={() => history.push("/signup")}
+                style={{ backgroundColor: "#800020" }}
               >
                 Create an account
               </Button>
             </div>
           </Box>
-        </section>
-      </main>
-    </div>
+        </div>
+      </div>
+    </>
   );
 }
 

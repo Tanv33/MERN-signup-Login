@@ -1,64 +1,53 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-.loginHeading{
-  margin: 10px;
-  color:  darkblue;
-  font-size: xx-large;
-}
-/*   
-  h1 {
-    color: #426696;
-    font-weight: 600;
-    font-size: 2.5rem;
-    opacity: 0.8;
-  }
-  h2,
-  p {
-    color: #658ec6;
-    font-weight: 500;
-    opacity: 0.8;
-  }
-  
-  h3 {
-    color: #426696;
-    font-weight: 600;
-    opacity: 0.8;
-  } */
-  
-  main {
-    font-family: "Poppins", sans-serif;
-    height: 100vh;
-    background: linear-gradient(to right top, #65dfc9, #6cdbeb);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .flex{
-  
-    display: flex;
-    justify-content: center;
-  }
+
+
+/* @media screen and (max-width: 425px) {
   .glass {
-    background: white;
-    min-height: 80vh;
-    width: 60%;
-    background: linear-gradient(
-      to right bottom,
-      rgba(255, 255, 255, 0.7),
-      rgba(255, 255, 255, 0.3)
-    );
-    border-radius: 2rem;
-    z-index: 2;
-    backdrop-filter: blur(2rem);
+    width: 94%;
   }
-  
-  @media screen and (max-width: 425px) {
-    .glass {
-      width: 94%;
-    }
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.loginHeading {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.mainParent {
+  background: url(https://images.pexels.com/photos/242236/pexels-photo-242236.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+
+}
+.parentChild {
+  width: 50vw;
+  height: 50vh;
+  align-self: center;
+}
+
+@media screen and (max-width: 425px) {
+  .parentChild {
+    width: 100%;
+    margin: 15px;
   }
-  
+}
+
+@media screen and (max-width: 728px) {
+  .parentChild {
+    width: 100%;
+    margin: 15px;
+  }
+}
