@@ -68,12 +68,11 @@ function Signup() {
           address: values.address,
         })
         .then((result) => {
-          // console.log(result.data);
           if (result.data === "user created") {
             //message
             setMessageBar(true);
             setTimeout(() => {
-              history.push("/login")
+              history.push("/login");
               setMessageBar("");
             }, 1000);
           }

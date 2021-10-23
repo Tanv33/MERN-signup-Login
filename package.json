@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^6.0.11"
@@ -8,7 +9,7 @@
   "version": "1.0.0",
   "main": "express.js",
   "scripts": {
-    "start":"node express",
+    "start": "node express",
     "dev": "node express",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

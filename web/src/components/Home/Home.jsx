@@ -1,4 +1,4 @@
-import * as React from "react";
+  import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,11 +7,13 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useHistory } from "react-router-dom";
+
 export default function Home() {
   const history = useHistory();
   return (
+    <>
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" style={{backgroundColor:"#800020"}}>
         <Toolbar>
           <IconButton
             size="large"
@@ -27,7 +29,7 @@ export default function Home() {
               onClick={() => history.push("/")}
               style={{ cursor: "pointer" }}
             >
-              News
+              Dashboard
             </span>
           </Typography>
           <Button color="inherit" onClick={() => history.push("/login")}>
@@ -39,5 +41,10 @@ export default function Home() {
         </Toolbar>
       </AppBar>
     </Box>
+    <div style={{ width:"100vw",height:"80vh", display:"flex",justifyContent:"center", alignItems:"center"}}>
+    <Typography variant="h3" style={{fontWeight:"bolder",color:"#800020"}} >Login To Access Services</Typography>
+
+    </div>
+    </>
   );
 }

@@ -8,6 +8,8 @@ import * as yup from "yup";
 import axios from "axios";
 import Message from "../Message/Message.jsx";
 import { useHistory } from "react-router-dom";
+import { GlobalContext } from "../../context/Context";
+import { useContext } from "react";
 
 const validationSchema = yup.object({
   email: yup
@@ -22,6 +24,7 @@ const validationSchema = yup.object({
 });
 
 function Login() {
+  let { dispatch } = useContext(GlobalContext);
   const [messageBar, setMessageBar] = useState("");
   const dev = "http://localhost:2000";
   const baseURL =
@@ -39,14 +42,23 @@ function Login() {
           password: values.password,
         })
         .then((result) => {
-          if (result.data === "matched") {
+          if (result.data !== "error") {
+            dispatch({
+              type: "USER_LOGIN",
+              payload: {
+                fullName: result.data.fullName,
+                email: result.data.email,
+                gender: result.data.gender,
+                phoneNumber: result.data.phoneNumber,
+                address: result.data.address,
+              },
+            });
             //message
-            // console.log("match");
+            setMessageBar(true);
             setTimeout(() => {
-               history.push("/dashboard")
+              history.push("/dashboard");
               setMessageBar([]);
             }, 1000);
-            setMessageBar(true);
           } else {
             // console.log("Email or password is invalid");
             setMessageBar(false);
