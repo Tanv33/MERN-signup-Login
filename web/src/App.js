@@ -81,7 +81,9 @@ function App() {
             <Splash/>
           </Route>
           <Route path="*">
-            <h1>Loading...</h1>
+            {/* <h1>Loading...</h1> */}
+            <Splash/>
+
           </Route>
           {/* <Redirect to="/" /> */}
         </Switch>
