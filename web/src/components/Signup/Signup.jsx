@@ -130,7 +130,7 @@ function Signup() {
               onBlur={formik.handleBlur}
               error={formik.touched.fullName && Boolean(formik.errors.fullName)}
               helperText={formik.touched.fullName && formik.errors.fullName}
-              style={{marginBottom:"10px"}}
+              style={{ marginBottom: "10px" }}
             />
             <TextField
               fullWidth
@@ -143,7 +143,7 @@ function Signup() {
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
-              style={{marginBottom:"10px"}}
+              style={{ marginBottom: "10px" }}
             />
 
             <FormControl component="fieldset">
@@ -173,6 +173,7 @@ function Signup() {
               fullWidth
               name="phoneNumber"
               label="Phone Number"
+              type="number"
               variant="outlined"
               placeholder="Enter Phone Number"
               value={formik.values.phoneNumber}
@@ -183,7 +184,7 @@ function Signup() {
               helperText={
                 formik.touched.phoneNumber && formik.errors.phoneNumber
               }
-              style={{marginBottom:"10px"}}
+              style={{ marginBottom: "10px" }}
             />
             <TextField
               fullWidth
@@ -196,7 +197,7 @@ function Signup() {
               onChange={formik.handleChange}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
-              style={{marginBottom:"10px"}}
+              style={{ marginBottom: "10px" }}
             />
             <TextField
               fullWidth
@@ -209,15 +210,17 @@ function Signup() {
               onChange={formik.handleChange}
               error={formik.touched.address && Boolean(formik.errors.address)}
               helperText={formik.touched.address && formik.errors.address}
-              style={{marginBottom:"10px"}}
+              style={{ marginBottom: "10px" }}
             />
             <Button
               type="submit"
               size="medium"
               variant="contained"
-
-              style={{ marginRight: "5px", backgroundColor: "#800020", marginBottom:"15px" }}
-
+              style={{
+                marginRight: "5px",
+                backgroundColor: "#800020",
+                marginBottom: "15px",
+              }}
             >
               Submit
             </Button>
@@ -225,9 +228,8 @@ function Signup() {
               size="medium"
               variant="contained"
               color="success"
-              style={{ backgroundColor: "#800020", marginBottom:"15px" }}
-
-              onClick={() => history.push("/login")}
+              style={{ backgroundColor: "#800020", marginBottom: "15px" }}
+              onClick={() => history.push("/")}
             >
               I have an account
             </Button>

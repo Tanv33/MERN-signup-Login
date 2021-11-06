@@ -1,5 +1,3 @@
-
-
 import "./Login.css";
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
@@ -39,15 +37,25 @@ function Login() {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       axios
-        .post(`${baseURL}/api/v1/login`, {
-          email: values.email,
-          password: values.password,
-        })
+        .post(
+          `${baseURL}/api/v1/login`,
+          {
+            email: values.email,
+            password: values.password,
+          },
+          {
+            withCredentials: true,
+          }
+        )
         .then((result) => {
           if (result.data !== "error") {
+            //message
+            setMessageBar(true);
+            setTimeout(() => {
             dispatch({
               type: "USER_LOGIN",
               payload: {
+                id: result.data._id,
                 fullName: result.data.fullName,
                 email: result.data.email,
                 gender: result.data.gender,
@@ -55,12 +63,9 @@ function Login() {
                 address: result.data.address,
               },
             });
-            //message
-            setMessageBar(true);
-            setTimeout(() => {
-              history.push("/dashboard");
+              history.push("/");
               setMessageBar([]);
-            }, 1000);
+            }, 500);
           } else {
             // console.log("Email or password is invalid");
             setMessageBar(false);

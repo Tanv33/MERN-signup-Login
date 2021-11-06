@@ -1,27 +1,24 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { GlobalContext } from "../../context/Context";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { Container } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
+import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import axios from "axios";
+import Box from "@mui/material/Box";
+import { useHistory } from "react-router-dom";
 import Message from "../Message/Message";
+import { GlobalContext } from "../../context/Context";
+import axios from "axios";
 import PostCard from "../PostCard/PostCard";
 
-function Dashboard() {
+function Profile() {
   const history = useHistory();
   const dev = "http://localhost:2000";
   const baseURL =
     window.location.hostname.split(":")[0] === "localhost" ? dev : "";
   let { state, dispatch } = useContext(GlobalContext);
-  const [inputText, setInputText] = useState("");
-  const [allPost, setAllPost] = useState([]);
-  const [continuousPost, setContinuousPost] = useState(false);
   const [messageBar, setMessageBar] = useState("");
+  const [allPost, setAllPost] = useState([]);
 
   useEffect(() => {
     axios.get(`${baseURL}/api/v1/post`).then((result) => {
@@ -30,34 +27,14 @@ function Dashboard() {
         arr.unshift(element);
       });
       setAllPost([...arr]);
+      // console.log(allPost);
     });
     return () => {
       // cleanup
     };
     // eslint-disable-next-line
-  }, [continuousPost]);
-  const inputOnChange = (e) => {
-    setInputText(e.target.value);
-  };
+  }, []);
 
-  const submitPost = (a) => {
-    a.preventDefault();
-    if (inputText !== "") {
-      if (state?.user?.fullName) {
-        axios
-          .post(`${baseURL}/api/v1/post`, {
-            text: inputText,
-            author: state.user.fullName,
-            authorId: state.user.id,
-          })
-          .then((result) => {
-            // console.log(result.data);
-            setContinuousPost(!continuousPost);
-            setInputText("");
-          });
-      }
-    }
-  };
   const logout = () => {
     if (state?.user?.fullName) {
       axios
@@ -91,6 +68,17 @@ function Dashboard() {
 
   return (
     <div>
+      {messageBar === true ? (
+        <Message type="success" message="Good bye!" />
+      ) : (
+        ""
+      )}
+      {messageBar === false ? (
+        <Message type="error" message="Sorry! Something went wrong" />
+      ) : (
+        ""
+      )}
+
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" sx={{ backgroundColor: "#800020" }}>
           <Toolbar>
@@ -99,53 +87,63 @@ function Dashboard() {
                 style={{ cursor: "pointer" }}
                 onClick={() => history.push("/")}
               >
+                {" "}
                 Home
               </span>
             </Typography>
             <Button color="inherit" onClick={() => history.push("/profile")}>
               Profile
-            </Button>
+            </Button>{" "}
             <Button color="inherit" onClick={logout}>
               Logout
             </Button>
           </Toolbar>
         </AppBar>
       </Box>
+
       <Container>
-        <Typography
-          variant="h4"
-          style={{ marginTop: "30px", fontWeight: "bold", color: "darkred" }}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            // backgroundColor: "red",
+            marginTop: "10px",
+            marginBottom: "30px",
+          }}
         >
-          Type your Post
-        </Typography>
-        <form onSubmit={submitPost}>
-          <Box
-            sx={{
-              "& > :not(style)": {
-                marginTop: "20px",
-                marginBottom: "14px",
-                width: "100%",
-              },
-            }}
-            autoComplete="off"
-          >
-            <TextField
-              label="Enter text"
-              value={inputText}
-              onChange={inputOnChange}
-              variant="filled"
-            />
-          </Box>
-          <Button
-            variant="contained"
-            color="error"
-            size="large"
-            style={{ marginBottom: "40px" }}
-            type="submit"
-          >
-            Post
-          </Button>
-        </form>
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJdfwoLPgNXoV0q8tDwIPQNUF3drxXLF1KXzJA-kQJKZy0n6x7MdxGnArJ2ghGv95-CYc&usqp=CAU"
+            style={{ borderRadius: "50%" }}
+            alt="userPic"
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            // backgroundColor: "red",
+            marginBottom: "20px",
+          }}
+        >
+          <div style={{ alignSelf: "center" }}>
+            <Typography variant="h6">
+              Name: &nbsp;{state.user.fullName}{" "}
+            </Typography>
+            <Typography variant="h6">
+              Email: &nbsp;{state.user.email}
+            </Typography>
+            <Typography variant="h6">
+              Gender: &nbsp;{state.user.gender}
+            </Typography>
+            <Typography variant="h6">
+              Phone Number: &nbsp;{state.user.phoneNumber}
+            </Typography>
+            <Typography variant="h6">
+              Address: &nbsp;{state.user.address}
+            </Typography>
+          </div>
+        </div>
+        <br />
         <div
           style={{
             backgroundColor: "#800020",
@@ -155,7 +153,7 @@ function Dashboard() {
           }}
         >
           <Typography variant="h6" color="white">
-            All Users Posts
+            Your Posts
           </Typography>
         </div>
         <br />
@@ -167,29 +165,22 @@ function Dashboard() {
             width: "100%",
           }}
         >
-          {allPost.map((element) => (
-            <PostCard
-              key={element._id}
-              title={element.author}
-              subHeader="10 mins ago"
-              content={element.text}
-            />
-          ))}
+          {allPost.map((element) =>
+            element.authorId === state.user.id ? (
+              <PostCard
+                key={element._id}
+                title={element.author}
+                subHeader="10 mins ago"
+                content={element.text}
+              />
+            ) : (
+              ""
+            )
+          )}
         </div>
       </Container>
-
-      {messageBar === true ? (
-        <Message type="success" message="Good bye!" />
-      ) : (
-        ""
-      )}
-      {messageBar === false ? (
-        <Message type="error" message="Sorry! Something went wrong" />
-      ) : (
-        ""
-      )}
     </div>
   );
 }
 
-export default Dashboard;
+export default Profile;
