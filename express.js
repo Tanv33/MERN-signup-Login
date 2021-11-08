@@ -38,6 +38,8 @@ const signup = mongoose.model("signup User", {
 
 const post = mongoose.model("Users Post", {
   text: String,
+  created: { type: Date, default: Date.now },
+
   author: String,
   authorId: String,
 });
@@ -49,83 +51,129 @@ app.get("/api/v1/signupuser", (req, res) => {
 });
 
 app.post("/api/v1/signupuser", async (req, res) => {
-  // Bcrypt
-  const salt = await bcrypt.genSalt(10);
-  const secPass = await bcrypt.hash(req.body.password, salt);
-  const signupuser = await new signup({
-    fullName: req.body.fullName,
-    email: req.body.email,
-    gender: req.body.gender,
-    phoneNumber: req.body.phoneNumber,
-    password: secPass,
-    address: req.body.address,
-  });
-  signupuser.save().then(() => {
-    // console.log("User created");
-    res.send("user created");
-  });
-});
+  const { fullName, email, gender, phoneNumber, password, address } = req.body;
+  if (!fullName || !email || !gender || !phoneNumber || !password || !address) {
+    console.log("signup field missing");
+    res.status(403).send("signup field missing");
+    return;
+  } else {
+    signup.findOne({ email: email }, async (err, user) => {
+      if (user) {
+        res.send("user already exist");
+      } else {
+        // Bcrypt
+        const salt = await bcrypt.genSalt(10);
+        const secPass = await bcrypt.hash(req.body.password, salt);
+        const signupuser = await new signup({
+          fullName: req.body.fullName,
+          email: req.body.email,
+          gender: req.body.gender,
+          phoneNumber: req.body.phoneNumber,
+          password: secPass,
+          address: req.body.address,
+        });
+        signupuser.save().then(() => {
+          // console.log("User created");
+          res.send("user created");
+        });
+      }
 
-app.post("/api/v1/login", async (req, res) => {
-  try {
-    const user = await signup.findOne({ email: req.body.email });
-    bcrypt.compare(req.body.password, user.password, function (err, result) {
-      // result === true
-      if (!err) {
-        if (result) {
-          var token = jwt.sign(
-            {
-              id: user._id,
-              fullName: user.fullName,
-              email: user.email,
-              gender: user.gender,
-              phoneNumber: user.phoneNumber,
-              address: user.address,
-            },
-            SECRET
-          );
-          // console.log("token", token);
-          res.cookie("token", token, {
-            httpOnly: true,
-            //expires: (new Date().getTime + 300000), // 5 minutes
-            maxAge: 86400000,
-          });
-          res.send(user);
-        } else {
-          res.send("error");
-        }
+      if (err) {
+        res.status(415).send("error in signup: " + err);
       }
     });
-  } catch (error) {
-    res.send("error");
-    // console.log(error);
   }
 });
 
-app.post("/api/v1/post", async (req, res) => {
-  const newpost = await new post({
-    text: req.body.text,
-    author: req.body.author,
-    authorId: req.body.authorId,
+app.post("/api/v1/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(403).send("email or password is missing");
+    return;
+  }
+  signup.findOne({ email: email }, async (err, user) => {
+    if (!user) {
+      res.send("Incorrect email");
+    }
+    if (err) {
+      res.status(500).send("Server error");
+    } else {
+      if (user) {
+        bcrypt.compare(password, user.password, function (err, result) {
+          // result === true
+          // console.log(result);
+          if (err) {
+            res.status(500).send("Server error");
+            // console.log(err);
+          } else {
+            if (result) {
+              var token = jwt.sign(
+                {
+                  id: user._id,
+                  fullName: user.fullName,
+                  email: user.email,
+                  gender: user.gender,
+                  phoneNumber: user.phoneNumber,
+                  address: user.address,
+                },
+                SECRET
+              );
+              res.cookie("token", token, {
+                httpOnly: true,
+                //expires: (new Date().getTime + 300000), // 5 minutes
+                maxAge: 86400000,
+              });
+              res.send(user);
+              // console.log(user);
+            } else {
+              res.send("Incorrect password");
+            }
+          }
+        });
+      } else {
+      }
+    }
   });
-  newpost.save().then(() => {
-    // console.log("Post created");
-    res.send("Post created");
-  });
-});
-
-app.get("/api/v1/post", (req, res) => {
-  post.find({}, (err, data) => {
-    res.send(data);
-  });
+  // const user = await signup.findOne({ email: req.body.email });
+  // bcrypt.compare(req.body.password, user.password, function (err, result) {
+  //   // result === true
+  //   if (!err) {
+  //     if (result) {
+  //       var token = jwt.sign(
+  //         {
+  //           id: user._id,
+  //           fullName: user.fullName,
+  //           email: user.email,
+  //           gender: user.gender,
+  //           phoneNumber: user.phoneNumber,
+  //           address: user.address,
+  //         },
+  //         SECRET
+  //       );
+  //       res.cookie("token", token, {
+  //         httpOnly: true,
+  //         //expires: (new Date().getTime + 300000), // 5 minutes
+  //         maxAge: 86400000,
+  //       });
+  //       res.send(user);
+  //     } else {
+  //       res.send("error");
+  //     }
+  //   }
+  // });
 });
 
 app.use((req, res, next) => {
   jwt.verify(req.cookies.token, SECRET, function (err, decoded) {
     req.body._decoded = decoded;
-    // console.log("decoded", decoded);
+    // console.log("decoded", req.body._decoded);
     // console.log("error", err);
-    next();
+    if (!err) {
+      next();
+    } else {
+      // console.log(err);
+      res.status(401).sendFile(path.join(__dirname, "./web/build/index.html"));
+    }
   });
 });
 
@@ -136,7 +184,7 @@ app.post("/api/v1/logout", (req, res) => {
   res.send("token vanished");
 });
 
-app.get("/api/v1/tokenforcontext", (req, res) => {
+app.get("/api/v1/tokenverify", (req, res) => {
   signup.findOne({ email: req.body._decoded?.email }, (err, user) => {
     if (user) {
       res.send({
@@ -151,6 +199,40 @@ app.get("/api/v1/tokenforcontext", (req, res) => {
       res.send("error:" + err);
     }
   });
+});
+
+app.post("/api/v1/posts", async (req, res) => {
+  const newpost = await new post({
+    text: req.body.text,
+    author: req.body._decoded.fullName,
+    authorId: req.body._decoded.id,
+  });
+  newpost.save().then(() => {
+    // console.log("Post created");
+    res.send("Post created");
+  });
+});
+
+app.get("/api/v1/posts", (req, res) => {
+  const page = Number(req.query.page);
+  // console.log("page: ", page);
+  post
+    .find({})
+    .sort({ created: "desc" })
+    .skip(page)
+    .limit(2)
+    .exec((err, data) => {
+      res.send(data);
+    });
+});
+
+app.get("/api/v1/post", (req, res) => {
+  post
+    .find({ authorId: req.body._decoded?.id })
+    .sort({ created: "desc" })
+    .exec((err, data) => {
+      res.send(data);
+    });
 });
 
 app.use("/**", (req, res) => {

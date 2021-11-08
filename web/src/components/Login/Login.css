@@ -1,11 +1,3 @@
-
-
-/* @media screen and (max-width: 425px) {
-  .glass {
-    width: 94%;
-  }
-} */
-
 * {
   margin: 0;
   padding: 0;
@@ -30,7 +22,6 @@
   display: flex;
   justify-content: center;
   overflow: auto;
-
 }
 .parentChild {
   width: 50vw;

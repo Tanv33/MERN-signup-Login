@@ -21,14 +21,19 @@ function Profile() {
   const [allPost, setAllPost] = useState([]);
 
   useEffect(() => {
-    axios.get(`${baseURL}/api/v1/post`).then((result) => {
-      let arr = [];
-      result.data.forEach((element) => {
-        arr.unshift(element);
+    axios
+      .get(`${baseURL}/api/v1/post`, {
+        withCredentials: true,
+      })
+      .then((result) => {
+        // let arr = [];
+        // result.data.forEach((element) => {
+        //   arr.unshift(element);
+        // });
+        // setAllPost([...arr]);
+        // console.log(allPost);
+        setAllPost(result.data);
       });
-      setAllPost([...arr]);
-      // console.log(allPost);
-    });
     return () => {
       // cleanup
     };
@@ -165,18 +170,14 @@ function Profile() {
             width: "100%",
           }}
         >
-          {allPost.map((element) =>
-            element.authorId === state.user.id ? (
-              <PostCard
-                key={element._id}
-                title={element.author}
-                subHeader="10 mins ago"
-                content={element.text}
-              />
-            ) : (
-              ""
-            )
-          )}
+          {allPost.map((element) => (
+            <PostCard
+              key={element._id}
+              title={element.author}
+              subHeader="10 mins ago"
+              content={element.text}
+            />
+          ))}
         </div>
       </Container>
     </div>

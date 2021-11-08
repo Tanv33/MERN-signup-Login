@@ -70,24 +70,27 @@ function Signup() {
         })
         .then((result) => {
           if (result.data === "user created") {
-            //message
             setMessageBar(true);
             setTimeout(() => {
-              history.push("/login");
+              history.push("/");
               setMessageBar("");
             }, 1000);
+            return;
+          }
+          if (result.data === "user already exist") {
+            setMessageBar(false);
+            setTimeout(() => {
+              setMessageBar("");
+            }, 1000);
+            return;
           }
         })
-        .catch((err) => {
-          // console.log(err);
-        });
+        .catch((err) => {});
     },
   });
 
   useEffect(() => {
-    axios.get(`${baseURL}/api/v1/signupuser`).then((res) => {
-      // console.log(res);
-    });
+    axios.get(`${baseURL}/api/v1/signupuser`).then((res) => {});
     // eslint-disable-next-line
   }, []);
 
@@ -98,6 +101,11 @@ function Signup() {
           type="success"
           message="Welcome! Successfully account created"
         />
+      ) : (
+        ""
+      )}
+      {messageBar === false ? (
+        <Message type="error" message="Sorry: Email already exist" />
       ) : (
         ""
       )}
@@ -116,7 +124,6 @@ function Signup() {
             component="form"
             noValidate
             autoComplete="off"
-            // textAlign="center"
             onSubmit={formik.handleSubmit}
           >
             <TextField

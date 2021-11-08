@@ -25,7 +25,7 @@ const validationSchema = yup.object({
 
 function Login() {
   let { dispatch } = useContext(GlobalContext);
-  const [messageBar, setMessageBar] = useState("");
+  const [messageBar, setMessageBar] = useState(undefined);
   const dev = "http://localhost:2000";
   const baseURL =
     window.location.hostname.split(":")[0] === "localhost" ? dev : "";
@@ -48,30 +48,39 @@ function Login() {
           }
         )
         .then((result) => {
-          if (result.data !== "error") {
+          if (result.data === "Incorrect email") {
+            setMessageBar(false);
+            setTimeout(() => {
+              setMessageBar(undefined);
+            }, 1000);
+          }
+          if (result.data === "Incorrect password") {
+            setMessageBar("");
+            setTimeout(() => {
+              setMessageBar(undefined);
+            }, 1000);
+          }
+          if (
+            result.data !== "Incorrect password" &&
+            result.data !== "Incorrect email"
+          ) {
             //message
             setMessageBar(true);
             setTimeout(() => {
-            dispatch({
-              type: "USER_LOGIN",
-              payload: {
-                id: result.data._id,
-                fullName: result.data.fullName,
-                email: result.data.email,
-                gender: result.data.gender,
-                phoneNumber: result.data.phoneNumber,
-                address: result.data.address,
-              },
-            });
+              dispatch({
+                type: "USER_LOGIN",
+                payload: {
+                  id: result.data._id,
+                  fullName: result.data.fullName,
+                  email: result.data.email,
+                  gender: result.data.gender,
+                  phoneNumber: result.data.phoneNumber,
+                  address: result.data.address,
+                },
+              });
               history.push("/");
-              setMessageBar([]);
+              setMessageBar(undefined);
             }, 500);
-          } else {
-            // console.log("Email or password is invalid");
-            setMessageBar(false);
-            setTimeout(() => {
-              setMessageBar([]);
-            }, 1000);
           }
         });
     },
@@ -82,7 +91,12 @@ function Login() {
     <>
       {messageBar === true ? <Message type="success" message="Welcome" /> : ""}
       {messageBar === false ? (
-        <Message type="error" message="Invalid email or password" />
+        <Message type="error" message="Incorrect email" />
+      ) : (
+        ""
+      )}
+      {messageBar === "" ? (
+        <Message type="error" message="Incorrect password" />
       ) : (
         ""
       )}

@@ -22,15 +22,22 @@ function Dashboard() {
   const [allPost, setAllPost] = useState([]);
   const [continuousPost, setContinuousPost] = useState(false);
   const [messageBar, setMessageBar] = useState("");
+  const [isMore, setIsMore] = useState(true);
 
   useEffect(() => {
-    axios.get(`${baseURL}/api/v1/post`).then((result) => {
-      let arr = [];
-      result.data.forEach((element) => {
-        arr.unshift(element);
+    axios
+      .get(`${baseURL}/api/v1/posts?page=0`, {
+        withCredentials: true,
+      })
+      .then((result) => {
+        // let arr = [];
+        // result.data.forEach((element) => {
+        //   arr.unshift(element);
+        // });
+        // setAllPost([...arr]);
+        setAllPost(result.data);
+        // console.log(result.data);
       });
-      setAllPost([...arr]);
-    });
     return () => {
       // cleanup
     };
@@ -45,11 +52,15 @@ function Dashboard() {
     if (inputText !== "") {
       if (state?.user?.fullName) {
         axios
-          .post(`${baseURL}/api/v1/post`, {
-            text: inputText,
-            author: state.user.fullName,
-            authorId: state.user.id,
-          })
+          .post(
+            `${baseURL}/api/v1/posts`,
+            {
+              text: inputText,
+            },
+            {
+              withCredentials: true,
+            }
+          )
           .then((result) => {
             // console.log(result.data);
             setContinuousPost(!continuousPost);
@@ -87,6 +98,23 @@ function Dashboard() {
         setMessageBar([]);
       }, 1000);
     }
+  };
+  const loadMore = () => {
+    axios
+      .get(`${baseURL}/api/v1/posts?page=${allPost.length}`, {
+        withCredentials: true,
+      })
+      .then((result) => {
+        if (result.data.length) {
+          const newPost = [...allPost, ...result.data];
+          setAllPost(newPost);
+        } else {
+          setIsMore(false);
+        }
+      });
+    return () => {
+      // cleanup
+    };
   };
 
   return (
@@ -176,6 +204,24 @@ function Dashboard() {
             />
           ))}
         </div>
+        <section
+          style={{ margin: "14px", display: "flex", justifyContent: "center" }}
+        >
+          {isMore ? (
+            <Button variant="contained" onClick={loadMore} color="secondary">
+              Load more
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              disabled
+              onClick={loadMore}
+              color="secondary"
+            >
+              Sorry No More Post
+            </Button>
+          )}
+        </section>
       </Container>
 
       {messageBar === true ? (
