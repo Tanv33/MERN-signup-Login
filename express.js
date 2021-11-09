@@ -226,6 +226,23 @@ app.get("/api/v1/posts", (req, res) => {
     });
 });
 
+app.post("/api/v1/postdelete", async (req, res) => {
+  // console.log(req.body);
+  // console.log(req.body._decoded);
+  const deleting = await post.deleteOne({
+    _id: req.body.postId,
+    authorId: req.body._decoded.id,
+  });
+  if (deleting.deletedCount) {
+    // console.log(deleting.deletedCount);
+    // console.log("deleted");
+    res.send("Successfully Deleted");
+  } else {
+    //  console.log("It's not your post");
+    res.send("It's not your Post");
+  }
+});
+
 app.get("/api/v1/post", (req, res) => {
   post
     .find({ authorId: req.body._decoded?.id })

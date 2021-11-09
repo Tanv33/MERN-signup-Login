@@ -26,12 +26,6 @@ function Profile() {
         withCredentials: true,
       })
       .then((result) => {
-        // let arr = [];
-        // result.data.forEach((element) => {
-        //   arr.unshift(element);
-        // });
-        // setAllPost([...arr]);
-        // console.log(allPost);
         setAllPost(result.data);
       });
     return () => {
@@ -172,6 +166,7 @@ function Profile() {
         >
           {allPost.map((element) => (
             <PostCard
+              identity={element._id}
               key={element._id}
               title={element.author}
               subHeader="10 mins ago"
