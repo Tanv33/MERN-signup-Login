@@ -11,6 +11,8 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import Message from "../Message/Message";
 import PostCard from "../PostCard/PostCard";
+import InfiniteScroll from "react-infinite-scroller";
+import Spinner from "../Spinner/Spinner";
 
 function Dashboard() {
   const history = useHistory();
@@ -99,6 +101,23 @@ function Dashboard() {
       }, 1000);
     }
   };
+  // const loadMore = () => {
+  //   axios
+  //     .get(`${baseURL}/api/v1/posts?page=${allPost.length}`, {
+  //       withCredentials: true,
+  //     })
+  //     .then((result) => {
+  //       if (result.data.length) {
+  //         const newPost = [...allPost, ...result.data];
+  //         setAllPost(newPost);
+  //       } else {
+  //         setIsMore(false);
+  //       }
+  //     });
+  //   return () => {
+  //     // cleanup
+  //   };
+  // };
   const loadMore = () => {
     axios
       .get(`${baseURL}/api/v1/posts?page=${allPost.length}`, {
@@ -116,7 +135,6 @@ function Dashboard() {
       // cleanup
     };
   };
-
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
@@ -186,7 +204,7 @@ function Dashboard() {
             All Users Posts
           </Typography>
         </div>
-        <br />
+
         <div
           style={{
             display: "flex",
@@ -195,20 +213,35 @@ function Dashboard() {
             width: "100%",
           }}
         >
-          {allPost.map((element) => (
-            <PostCard
-              key={element._id}
-              title={element.author}
-              subHeader="10 mins ago"
-              content={element.text}
-            />
-          ))}
+          <br />
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={loadMore}
+            hasMore={isMore}
+            loader={
+              <Spinner key={0} />
+              // <div className="loader" >
+              //   Loading ...
+              // </div>
+            }
+          >
+            {allPost.map((element) => (
+              <PostCard
+                // identity={element._id}
+                key={element._id}
+                title={element.author}
+                subHeader="10 mins ago"
+                content={element.text}
+              />
+            ))}
+          </InfiniteScroll>
         </div>
-        <section
+        {/* <section
           style={{ margin: "14px", display: "flex", justifyContent: "center" }}
         >
           {isMore ? (
-            <Button variant="contained" onClick={loadMore} color="secondary">
+            <Button variant="contain
+            ed" onClick={loadMore} color="secondary">
               Load more
             </Button>
           ) : (
@@ -221,7 +254,7 @@ function Dashboard() {
               Sorry No More Post
             </Button>
           )}
-        </section>
+        </section> */}
       </Container>
 
       {messageBar === true ? (
