@@ -3,6 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { useHistory } from "react-router-dom";
@@ -10,6 +11,7 @@ import Message from "../Message/Message";
 import { GlobalContext } from "../../context/Context";
 import axios from "axios";
 import PostCard from "../PostCard/PostCard";
+import { useFormik } from "formik";
 
 function Profile() {
   const history = useHistory();
@@ -19,6 +21,7 @@ function Profile() {
   let { state, dispatch } = useContext(GlobalContext);
   const [messageBar, setMessageBar] = useState("");
   const [allPost, setAllPost] = useState([]);
+  const [shuffle, setShuffle] = useState(true);
 
   useEffect(() => {
     axios
@@ -64,7 +67,52 @@ function Profile() {
       }, 1000);
     }
   };
+  const showInputs = () => {
+    setShuffle(false);
+  };
 
+  const formik = useFormik({
+    initialValues: {
+      fullName: state.user.fullName,
+      gender: state.user.gender,
+      phoneNumber: state.user.phoneNumber,
+      address: state.user.address,
+    },
+    onSubmit: (values) => {
+      // alert(JSON.stringify(values, null, 2));
+      // console.log(values);
+      axios
+        .put(
+          `${baseURL}/api/v1/updateprofile`,
+          {
+            fullName: values.fullName,
+            gender: values.gender,
+            phoneNumber: values.phoneNumber,
+            address: values.address,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((result) => {
+          // console.log(result.data);
+          // dispatch({
+          //   type: "USER_LOGIN",
+          //   payload: {
+          //     id: result.data.id,
+          //     fullName: result.data.fullName,
+          //     email: result.data.email,
+          //     gender: result.data.gender,
+          //     phoneNumber: result.data.phoneNumber,
+          //     address: result.data.address,
+          //   },
+          // });
+          setShuffle(!shuffle);
+          window.location.reload();
+        })
+        .catch((params) => {});
+    },
+  });
   return (
     <div>
       {messageBar === true ? (
@@ -125,21 +173,97 @@ function Profile() {
           }}
         >
           <div style={{ alignSelf: "center" }}>
-            <Typography variant="h6">
-              Name: &nbsp;{state.user.fullName}{" "}
-            </Typography>
-            <Typography variant="h6">
-              Email: &nbsp;{state.user.email}
-            </Typography>
-            <Typography variant="h6">
-              Gender: &nbsp;{state.user.gender}
-            </Typography>
-            <Typography variant="h6">
-              Phone Number: &nbsp;{state.user.phoneNumber}
-            </Typography>
-            <Typography variant="h6">
-              Address: &nbsp;{state.user.address}
-            </Typography>
+            <form onSubmit={formik.handleSubmit}>
+              <Typography variant="h6">
+                Name: &nbsp;{" "}
+                {shuffle ? (
+                  state.user.fullName
+                ) : (
+                  <TextField
+                    size="small"
+                    variant="outlined"
+                    name="fullName"
+                    style={{marginBottom:"4px"}}
+                    value={formik.values.fullName}
+                    onChange={formik.handleChange}
+                  />
+                )}
+              </Typography>
+              <Typography variant="h6" style={{marginBottom:"4px"}}>
+                Email: &nbsp;{state.user.email}
+              </Typography>
+              <Typography variant="h6">
+                Gender: &nbsp;{" "}
+                {shuffle ? (
+                  state.user.gender
+                ) : (
+                  <TextField
+                    size="small"
+                    variant="outlined"
+                    name="gender"
+                    style={{marginBottom:"4px"}}
+                    value={formik.values.gender}
+                    onChange={formik.handleChange}
+                  />
+                )}
+              </Typography>
+              <Typography variant="h6">
+                Phone Number: &nbsp;{" "}
+                {shuffle ? (
+                  state.user.phoneNumber
+                ) : (
+                  <TextField
+                    size="small"
+                    variant="outlined"
+                    type="number"
+                    style={{marginBottom:"4px"}}
+                    name="phoneNumber"
+                    value={formik.values.phoneNumber}
+                    onChange={formik.handleChange}
+                  />
+                )}
+              </Typography>
+              <Typography variant="h6">
+                Address: &nbsp;{" "}
+                {shuffle ? (
+                  state.user.address
+                ) : (
+                  <TextField
+                    size="small"
+                    variant="outlined"
+                    name="address"
+                    style={{marginBottom:"4px"}}
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                  />
+                )}
+              </Typography>
+
+              {shuffle ? (
+                <Button
+                  variant="contained"
+                  onClick={showInputs}
+                  color="error"
+                  type="unsubmit"
+                >
+                  Edit Profile
+                </Button>
+              ) : (
+                ""
+              )}
+              {!shuffle ? (
+                <Button
+                  variant="contained"
+                  style={{ float: "right" }}
+                  type="submit"
+                  color="success"
+                >
+                  Submit
+                </Button>
+              ) : (
+                ""
+              )}
+            </form>
           </div>
         </div>
         <br />

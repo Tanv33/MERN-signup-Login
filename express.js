@@ -251,6 +251,27 @@ app.get("/api/v1/post", (req, res) => {
       res.send(data);
     });
 });
+app.put("/api/v1/updateprofile",  (req, res) => {
+  // res.send(req.body)
+  signup.findByIdAndUpdate(
+    req.body._decoded.id,
+    {
+      fullName: req.body.fullName,
+      gender: req.body.gender,
+      phoneNumber: req.body.phoneNumber,
+      address: req.body.address,
+    },
+   function  (err, result) {
+     if (result) {
+      //  console.log(result);
+      res.send(result)
+     }
+      if (err) {
+        // console.log(err);
+      }
+    }
+  );
+});
 
 app.use("/**", (req, res) => {
   // res.redirect("/")
