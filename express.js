@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 2000;
 const SECRET = process.env.SECRET || "0900";
 const __dirname = path.resolve();
-
+//owais iqbal
 app.use(
   cors({
     origin: ["http://localhost:3000"],
